@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido de Desculpas</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(to bottom right, #d3cce3, #e9e4f0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .mensagem {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 90%;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #6a0572;
+    }
+
+    p {
+      color: #333;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #6a0572;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      width: 90%;
+      max-width: 300px;
+    }
+
+    button:hover {
+      background-color: #4e0456;
+    }
+
+    .player-container {
+      width: 90%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 16px;
+      background-color: #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background-color: #6a0572;
+    }
+
+    .time-display {
+      font-size: 14px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mensagem">
+    <h1>Me perdoa...</h1>
+    <p>
+      Sei que errei, e não tenho desculpas suficientes para justificar o que aconteceu. <br>
+      Só quero que saiba que estou verdadeiramente arrependido, e que o que mais desejo <br>
+      é ter uma nova chance para fazer tudo diferente. <br><br>
+      Você é muito importante para mim. <br>
+      Sei que já comecei errando, falei besteira hoje… Acertei ontem, mas errei hoje. <br>
+      Mesmo assim, eu quero ficar com você. Prometo que não vou te desrespeitar novamente.
+    </p>
+    
+    <p style="font-size: 26px; color: #d0006f; font-weight: bold; margin-top: 20px;">
+      💖 Eu te amo 💖
+    </p>
+  </div>
+
+  <button onclick="tocarMusica()">Tocar Música</button>
+
+  <div class="player-container">
+    <div class="progress-bar" onclick="mudarTempo(event)">
+      <div class="progress" id="progresso"></div>
+    </div>
+    <div class="time-display">
+      <span id="tempoAtual">00:00</span> / <span id="duracaoTotal">00:00</span>
+    </div>
+  </div>
+
+  <audio id="bg-music" loop>
+    <!-- Nome do arquivo deve estar no mesmo diretório, sem espaços nem parênteses -->
+    <source src="brigas_por_nada.mp3" type="audio/mpeg">
+    Seu navegador não suporta áudio.
+  </audio>
+
+  <script>
+    const audio = document.getElementById("bg-music");
+    const progresso = document.getElementById("progresso");
+    const tempoAtualSpan = document.getElementById("tempoAtual");
+    const duracaoTotalSpan = document.getElementById("duracaoTotal");
+    const progressBar = document.querySelector(".progress-bar");
+
+    function tocarMusica() {
+      audio.play();
+    }
+
+    function formatarTempo(segundos) {
+      const min = Math.floor(segundos / 60);
+      const seg = Math.floor(segundos % 60);
+      return `${min.toString().padStart(2, '0')}:${seg.toString().padStart(2, '0')}`;
+    }
+
+    audio.addEventListener("loadedmetadata", () => {
+      duracaoTotalSpan.textContent = formatarTempo(audio.duration);
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      const porcentagem = (audio.currentTime / audio.duration) * 100;
+      progresso.style.width = `${porcentagem}%`;
+      tempoAtualSpan.textContent = formatarTempo(audio.currentTime);
+    });
+
+    function mudarTempo(e) {
+      const largura = progressBar.clientWidth;
+      const clickX = e.offsetX;
+      const novaDuracao = (clickX / largura) * audio.duration;
+      audio.currentTime = novaDuracao;
+    }
+  </script>
+
+</body>
+</html>
